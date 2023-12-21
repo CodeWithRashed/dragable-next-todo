@@ -2,8 +2,8 @@
 
 const Banner = () => {
   return (
-    <div className="bg-[#E5F4F2]">
-      
+    <div className="bg-primary">
+      <h1 className="text-primary">HEllo next</h1>
     </div>
   )
 }
