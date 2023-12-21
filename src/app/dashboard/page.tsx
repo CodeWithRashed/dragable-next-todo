@@ -1,8 +1,4 @@
-
 import Navbar from "@/components/Navbar";
-
-
-
 const DashBoard = () => {
 
   return (

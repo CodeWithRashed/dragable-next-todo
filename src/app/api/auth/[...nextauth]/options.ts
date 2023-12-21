@@ -4,37 +4,74 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const options: NextAuthOptions = {
   providers: [
     GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID as string,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
-      }),
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username",
+        name: {
+          label: "name",
           type: "text",
-          placeholder: "Your Username...",
+          placeholder: "Your Name...",
         },
-        password: { label: "Password", type: "password",  placeholder: "Your Password...", },
+        email: {
+          label: "email",
+          type: "text",
+          placeholder: "Your Name...",
+        },
+        password: {
+          label: "password",
+          type: "password",
+          placeholder: "Your Password...",
+        },
       },
       async authorize(credentials: any): Promise<any | null> {
-        const { username, password } = credentials;
+        try {
+          const { name, email, password } = credentials;
+         // Find user by email in your MongoDB database
+        const user = await User.findOne({ email: email });
 
-        if (username === "validUsername" && password === "validPassword") {
-          // If authentication succeeds, return the user object
-          return { id: 1, name: "John Doe", email: "john@example.com" };
+// If the user doesn't exist or the password is incorrect, return null
+        if (!user) {
+          return Promise.resolve({message: "User Not Found"});
+        }
+         
+          return Promise.resolve("");
+        } catch (err: any) {
+          console.log("email auth error");
         }
 
-        // If authentication fails, return null
-        return null;
+        // Find user by email in your MongoDB database
+        // const user = await User.findOne({ email: username });
+
+        // If the user doesn't exist or the password is incorrect, return null
+        // if (!user || !(await bcrypt.compare(password, user.password))) {
+        //   return null;
+        // }
+
+        // If authentication succeeds, return the user object
       },
     }),
   ],
+  callbacks: {
+    async signIn(user): Promise<any | null> {
+      try {
+        console.log(user);
+
+        return Promise.resolve(true);
+      } catch (error) {
+        console.error("Google sign-in error:", error);
+        return Promise.resolve(false);
+      }
+    },
+  },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",
-  }
+  },
 };

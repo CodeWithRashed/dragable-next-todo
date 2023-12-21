@@ -2,14 +2,39 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn } from 'next-auth/react';
-
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 const Login = () => {
-  const router = useRouter();
+  const [email, setEmail] = useState('rashed@gmail.com');
+  const [password, setPassword] = useState('1234567');
 
+  const router = useRouter();
+const {data: session} = useSession()
+console.log(session)
   //Handle Google Login
   const handleGoogleLogin = async () => {
-   const res = await signIn("google")
+ await signIn("google")
    router.push("/dashboard")
+  }
+
+
+  //Handle Email Login
+  const handleEmailLogin = async () => {
+    const result = await signIn('credentials', {
+      username: email,
+      password,
+      redirect: false,
+    });
+
+    console.log(result);
+
+    if (!result!.error) {
+      // Login successful
+      router.push("/dashboard");
+    } else {
+      // Login failed
+      console.error('Login failed', result!.error);
+    }
   }
   return (
     <div>
@@ -32,7 +57,7 @@ tracking-tight text-gray-900"
             </div>
 
             <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-6"  method="POST">
+            
                 <div>
                   <label
                     htmlFor="email"
@@ -80,7 +105,7 @@ focus:ring-bg-btn-primary-bg sm:text-sm sm:leading-6"
                 <div>
                   <button
                     onClick={() => {
-                      router.push("/dashboard");
+                     handleEmailLogin()
                     }}
                     className="flex w-full justify-center 
 rounded-md bg-btn-primary-bg px-3 py-1.5 text-sm font-semibold leading-6 
@@ -90,7 +115,7 @@ focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bg-
                     Sign in
                   </button>
                 </div>
-              </form>
+           
                 <div className="mt-3">
                   <button
                     onClick={() => handleGoogleLogin()}
