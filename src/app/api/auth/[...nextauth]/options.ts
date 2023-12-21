@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/userModels";
 import { connect } from "@/db/dbConfig";
+import bcryptjs from "bcryptjs";
 export const options: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -31,30 +32,31 @@ export const options: NextAuthOptions = {
       },
       async authorize(credentials: any): Promise<any | null> {
         try {
-          connect()
-          const { name, email, password } = credentials;
+          connect();
+          const { username, password } = credentials;
+          
+    
           // Find user by email in your MongoDB database
-          const user = await User.findOne({ email: email });
-
+          const user = await User.findOne({ email: username });
+          console.log(user)
           // If the user doesn't exist or the password is incorrect, return null
           if (!user) {
             return Promise.resolve({ error: "User Not Found" });
           }
-
-          return Promise.resolve(user);
+          if (user) {
+            const validPassword = await bcryptjs.compare(
+              password,
+              user.password
+            );
+            if (!validPassword) {
+              return Promise.resolve({ error: "Wrong Password" });
+            }
+            return Promise.resolve(user);
+          }
         } catch (err: any) {
           console.log("email auth error");
         }
 
-        // Find user by email in your MongoDB database
-        // const user = await User.findOne({ email: username });
-
-        // If the user doesn't exist or the password is incorrect, return null
-        // if (!user || !(await bcrypt.compare(password, user.password))) {
-        //   return null;
-        // }
-
-        // If authentication succeeds, return the user object
       },
     }),
   ],

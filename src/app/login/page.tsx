@@ -5,8 +5,8 @@ import { signIn } from 'next-auth/react';
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 const Login = () => {
-  const [email, setEmail] = useState('rashed@gmail.com');
-  const [password, setPassword] = useState('1234567');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const router = useRouter();
 const {data: session} = useSession()
@@ -70,7 +70,9 @@ tracking-tight text-gray-900"
                       id="email"
                       name="email"
                       type="email"
-                      autoComplete="email"
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
                       className="block w-full rounded-md border-0 py-1.5 
 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
@@ -94,7 +96,9 @@ focus:ring-bg-btn-primary-bg sm:text-sm sm:leading-6"
                       id="password"
                       name="password"
                       type="password"
-                      autoComplete="current-password"
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                      }}
                       className="block w-full rounded-md border-0 py-1.5 
 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 p
 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
