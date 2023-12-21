@@ -1,6 +1,8 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/userModels";
+import { connect } from "@/db/dbConfig";
 export const options: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -29,16 +31,17 @@ export const options: NextAuthOptions = {
       },
       async authorize(credentials: any): Promise<any | null> {
         try {
+          connect()
           const { name, email, password } = credentials;
-         // Find user by email in your MongoDB database
-        const user = await User.findOne({ email: email });
+          // Find user by email in your MongoDB database
+          const user = await User.findOne({ email: email });
 
-// If the user doesn't exist or the password is incorrect, return null
-        if (!user) {
-          return Promise.resolve({message: "User Not Found"});
-        }
-         
-          return Promise.resolve("");
+          // If the user doesn't exist or the password is incorrect, return null
+          if (!user) {
+            return Promise.resolve({ error: "User Not Found" });
+          }
+
+          return Promise.resolve(user);
         } catch (err: any) {
           console.log("email auth error");
         }
