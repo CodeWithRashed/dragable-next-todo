@@ -1,6 +1,10 @@
+
 import Navbar from "@/components/Navbar";
 
+
+
 const DashBoard = () => {
+
   return (
     <div>
       <Navbar></Navbar>

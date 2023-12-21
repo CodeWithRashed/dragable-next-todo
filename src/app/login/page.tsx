@@ -1,9 +1,16 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { signIn } from 'next-auth/react';
 
 const Login = () => {
   const router = useRouter();
+
+  //Handle Google Login
+  const handleGoogleLogin = async () => {
+   const res = await signIn("google")
+   router.push("/dashboard")
+  }
   return (
     <div>
       <div className="flex justify-center mt-16">
@@ -25,7 +32,7 @@ tracking-tight text-gray-900"
             </div>
 
             <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-6" action="#" method="POST">
+              <form className="space-y-6"  method="POST">
                 <div>
                   <label
                     htmlFor="email"
@@ -77,15 +84,16 @@ focus:ring-bg-btn-primary-bg sm:text-sm sm:leading-6"
                     }}
                     className="flex w-full justify-center 
 rounded-md bg-btn-primary-bg px-3 py-1.5 text-sm font-semibold leading-6 
-text-white shadow-sm hover:bg-bgttext-btn-primary-bg/[.7] focus-visible:outline 
+text-white shadow-sm hover:bg-text-btn-primary-bg/[.7] focus-visible:outline 
 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bg-btn-primary-bg"
                   >
                     Sign in
                   </button>
                 </div>
-                <div>
+              </form>
+                <div className="mt-3">
                   <button
-                    // onClick={() => signIn("google")}
+                    onClick={() => handleGoogleLogin()}
                     className="flex w-full justify-center rounded-md bg-btn-primary-bg px-3 
 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-bgttext-btn-primary-bg/[.7] 
 focus-visible:outline focus-visible:outline-2 
@@ -140,7 +148,6 @@ focus-visible:outline-offset-2 focus-visible:outline-bg-btn-primary-bg"
                     </div>
                   </button>
                 </div>
-              </form>
 
               <p className="mt-5 text-center text-sm text-gray-500">
                 New Here?
