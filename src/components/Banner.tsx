@@ -1,11 +1,27 @@
-
+import Link from "next/link";
 
 const Banner = () => {
   return (
-    <div className="bg-primary">
-      <h1 className="text-primary">HEllo next</h1>
-    </div>
-  )
-}
+    <div className="bg-primary h-[90vh] flex justify-center items-center flex-col">
+      <div className="max-w-[1240px] px-5 mx-auto">
+        <div className="text-content text-center">
+          <h1 className="text-primary text-6xl">
+            Manage Your Task With Ease With <br /> Next Todo
+          </h1>
+        </div>
 
-export default Banner
+        {/* Banner CTA */}
+        <div className="cta">
+          <Link
+            href="/dashboard"
+            className="text-white bg-btn-primary-bg rounded px-4 py-2 font-bold"
+          >
+            Explore
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Banner;
