@@ -149,7 +149,7 @@ try {
     };
   
     getTodo();
-  }, [isNewTask, pending]);;
+  }, [isNewTask, pending, session?.user?.email]);;
   
 
   if (Object.keys(data).length === 0) {
