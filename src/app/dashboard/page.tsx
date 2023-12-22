@@ -1,16 +1,17 @@
+
+import DndTodo from "@/components/DndTodo";
 import Navbar from "@/components/Navbar";
-const DashBoard = () => {
+
+const Dashboard = () => {
+  
 
   return (
-    <div>
-      <Navbar></Navbar>
-      <div className="dashboard-content">
-        <div className="user-input">
-          <input type="text" />
-        </div>
-      </div>
-    </div>
+   <div>
+    <DndTodo></DndTodo>
+   </div>
   );
 };
 
-export default DashBoard;
+export default Dashboard;
+
+
