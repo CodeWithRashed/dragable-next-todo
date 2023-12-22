@@ -7,6 +7,7 @@ import { cardsData } from "@/app/data/cardsData";
 import Navbar from "./Navbar";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 // Updated task structure
 interface Task {
@@ -82,12 +83,15 @@ const updateTaskStatus = async (taskId:any, newStatus:any) => {
       if (destinationStatus === "0") {
         draggedTask.taskStatus = "TODO";
         taskDestination = "TODO";
+        toast.success('Status Updated!')
       } else if (destinationStatus === "1") {
         draggedTask.taskStatus = "INPROGRESS";
         taskDestination = "INPROGRESS";
+        toast.success('Status Updated!')
       } else if (destinationStatus === "2") {
         draggedTask.taskStatus = "COMPLETED";
         taskDestination = "COMPLETED";
+        toast.success('Status Updated!')
       }
       updateTaskStatus(draggedTask._id, draggedTask.taskStatus)
 
@@ -112,7 +116,7 @@ const updateTaskStatus = async (taskId:any, newStatus:any) => {
 try {
   
   const res = await axios.post("/api/todo", newTask)
- 
+  toast.success('Task Created Successfully !')
 } finally{
   setPending(false)
   setTodo("")
