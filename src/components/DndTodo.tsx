@@ -5,7 +5,6 @@ import { Draggable, DropResult, Droppable } from "react-beautiful-dnd";
 import { DndContext } from "@/AuthContext/DndContext";
 import { cardsData } from "@/app/data/cardsData";
 import Navbar from "./Navbar";
-import { connect } from "@/db/dbConfig";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
@@ -18,6 +17,7 @@ interface Task {
 }
 
 const DndTodo = () => {
+  const [isNewTask, setIsNewTask] = useState(5)
   const { data: session } = useSession();
   const [pending, setPending] = useState(false)
   const [todo, setTodo]=useState("")
@@ -66,6 +66,19 @@ const DndTodo = () => {
         1
       );
 
+//Update Task
+const updateTaskStatus = async (taskId:any, newStatus:any) => {
+  try {
+    // Make a PUT or PATCH request to update the task status
+    await axios.put(`/api/todo?${taskId}`, { taskStatus: newStatus });
+    console.log("Task status updated successfully!");
+  } catch (error) {
+    console.error("Error updating task status:", error);
+    // Handle the error, e.g., show a notification to the user
+  }
+};
+
+
       if (destinationStatus === "0") {
         draggedTask.taskStatus = "TODO";
         taskDestination = "TODO";
@@ -76,19 +89,21 @@ const DndTodo = () => {
         draggedTask.taskStatus = "COMPLETED";
         taskDestination = "COMPLETED";
       }
+      updateTaskStatus(draggedTask._id, draggedTask.taskStatus)
 
       newData[taskDestination] = [
         ...(newData[taskDestination] || []),
         draggedTask,
       ];
-
       return newData;
     });
   };
 
   //Handle Create New Task
   const createTask = async () => {
+    const uniqueValue = parseInt(Math.random().toString(36).substring(2) + Date.now());
     setPending(true)
+    setIsNewTask(uniqueValue)
     const newTask = {
       taskName: todo,
       taskStatus: "TODO",
@@ -97,36 +112,45 @@ const DndTodo = () => {
 try {
   
   const res = await axios.post("/api/todo", newTask)
-  console.log(newTask)
+ 
 } finally{
   setPending(false)
+  setTodo("")
 }
 
 
 
   };
   useEffect(() => {
-    // Initialize an object to store tasks by status
-    const groupedData: { [key: string]: Task[] } = {};
-
-    // Filter tasks by status and push them to the corresponding arrays
-    cardsData.forEach((task) => {
-      const { taskStatus } = task;
-
-      if (!groupedData[taskStatus]) {
-        groupedData[taskStatus] = [];
+    const getTodo = async () => {
+      try {
+        const todoData = await axios.get(`/api/todo?email=${session?.user?.email}`);
+  
+        const groupedData: { [key: string]: Task[] } = {};
+  
+        todoData?.data?.todos?.forEach((task: any) => {
+          const { taskStatus } = task;
+  
+          if (!groupedData[taskStatus]) {
+            groupedData[taskStatus] = [];
+          }
+  
+          groupedData[taskStatus].push(task);
+        });
+  
+        setData({
+          TODO: groupedData["TODO"] || [],
+          INPROGRESS: groupedData["INPROGRESS"] || [],
+          COMPLETED: groupedData["COMPLETED"] || [],
+        });
+      } catch (error) {
+        console.error("Error fetching todo data:", error);
       }
-
-      groupedData[taskStatus].push(task);
-    });
-
-    // Set the filtered and grouped data to the state
-    setData({
-      TODO: groupedData["TODO"] || [],
-      INPROGRESS: groupedData["INPROGRESS"] || [],
-      COMPLETED: groupedData["COMPLETED"] || [],
-    });
-  }, []);
+    };
+  
+    getTodo();
+  }, [isNewTask, pending]);;
+  
 
   if (Object.keys(data).length === 0) {
     return <FaSpinner className="animate-spin" />;
@@ -139,6 +163,7 @@ try {
         <div className="create-todo flex justify-center items-center mt-5">
           <input
             type="text"
+            value={todo}
             onChange={(e)=>{
               setTodo(e.target.value)
             }}

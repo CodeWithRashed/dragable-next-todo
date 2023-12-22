@@ -29,9 +29,42 @@ export async function POST(request: NextRequest) {
 
 //Get Task
 export async function GET(request: NextRequest, response: NextResponse) {
-    console.log(request)
-    return NextResponse.json(
-      { success: "Response From API Server" },
-      { status: 200 }
-    );
+  connect();
+  const url = request.url;
+  const createdUser = url.split("=")[1]
+
+const todoData = await Task.find({createdBy: createdUser})
+
+    return NextResponse.json({todos: todoData});
   }
+
+
+  //Update Task Status
+  // Update Task
+export async function PUT(request: NextRequest, response: NextResponse) {
+  connect();
+
+  // Get task ID from the URL
+  const taskId = request.url.split("?")[1];
+
+  // Extract the new task status from the request body
+  const { taskStatus } = await request.json();
+
+  try {
+    // Find the task by ID and update the task status
+    const updatedTask = await Task.findByIdAndUpdate(
+      taskId,
+      { taskStatus },
+      { new: true } // Return the updated task
+    );
+
+    if (!updatedTask) {
+      return NextResponse.json({ error: 'Task not found' });
+    }
+
+    return NextResponse.json({ updatedTask });
+  } catch (error) {
+    console.error('Error updating task:', error);
+    return NextResponse.json({ error: 'Task Update Error' });
+  }
+}
