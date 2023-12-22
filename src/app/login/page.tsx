@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +15,7 @@ const Login = () => {
   //Handle Google Login
   const handleGoogleLogin = async () => {
     await signIn("google");
+    toast.success('Login Successfully !')
     router.push("/dashboard");
   };
 
