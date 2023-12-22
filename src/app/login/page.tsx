@@ -2,16 +2,15 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const router = useRouter();
-  const { data: session } = useSession();
+
   const [loginError, setLoginError] = useState("")
-  console.log(session);
+
   //Handle Google Login
   const handleGoogleLogin = async () => {
     await signIn("google");

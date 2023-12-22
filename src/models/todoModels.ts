@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const cardSchema = new mongoose.Schema({
+const taskSchema = new mongoose.Schema({
   taskName: {
     type: String,
   },
@@ -9,12 +9,11 @@ const cardSchema = new mongoose.Schema({
     type: String,
   },
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true,
   },
 });
 
-const Card = mongoose.model("Card", cardSchema);
+const Task = mongoose.model("Task", taskSchema);
 
-module.exports = Card;
+export default Task
