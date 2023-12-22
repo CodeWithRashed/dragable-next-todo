@@ -30,7 +30,7 @@ const Navbar = () => {
       {
         session?.user?.email ? <button onClick={ ()=>{ signOut()}} className={`bg-btn-primary-bg px-2 py-1 text-white font-bold`}>
         SignOut
-    </button> :  <Link href="/login" className={`${path === "/login" ? "border-b-2 border-btn-primary-bg" : "border-b-2 border-transparent text-bold "}`}>
+    </button> :  <Link href="/login" className={`bg-btn-primary-bg px-2 py-1 text-white font-bold}`}>
             Login
         </Link>
       }

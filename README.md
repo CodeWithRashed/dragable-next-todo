@@ -6,6 +6,7 @@
 - Next Js
 - React Hot Toast
 - Tailwind
+- React Dnd
 
 
 ## Getting Started
