@@ -20,6 +20,8 @@ interface Task {
 const DndTodo = () => {
   const [isNewTask, setIsNewTask] = useState(5)
   const { data: session } = useSession();
+  const currentUserEmail = session?.user?.email
+  console.log(currentUserEmail)
   const [pending, setPending] = useState(false)
   const [todo, setTodo]=useState("")
   const [data, setData] = useState<{ [key: string]: Task[] }>({

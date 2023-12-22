@@ -1,6 +1,8 @@
 import { connect } from "@/db/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import Task from "@/models/todoModels";
+import { getServerSession } from "next-auth"
+import { options } from "../auth/[...nextauth]/options";
 export async function POST(request: NextRequest) {
   try {
     connect();
@@ -30,10 +32,12 @@ export async function POST(request: NextRequest) {
 //Get Task
 export async function GET(request: NextRequest, response: NextResponse) {
   connect();
-  const url = request.url;
-  const createdUser = url.split("=")[1]
+  const session = await getServerSession(options)
 
-const todoData = await Task.find({createdBy: createdUser})
+  const url = request.url;
+  const createdUser = url.split("=")[1] 
+
+const todoData = await Task.find({createdBy: createdUser || session?.user?.email})
 
     return NextResponse.json({todos: todoData});
   }
