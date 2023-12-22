@@ -17,7 +17,7 @@ const Navbar = () => {
             alt="Logo"
             className="h-10 w-10 object-cover"
             ></Image>
-             <p>Next Todo</p>
+             <p className="hidden lg:flex">Next Todo</p>
         </Link>
        
     </div>

@@ -163,11 +163,12 @@ try {
         <div className="create-todo flex justify-center items-center mt-5">
           <input
             type="text"
+            
             value={todo}
             onChange={(e)=>{
               setTodo(e.target.value)
             }}
-            className="border-2 border-btn-primary-bg outline-none h-10 px-2 rounded-l"
+            className="border-2 w-1/2 border-btn-primary-bg outline-none h-10 px-2 rounded-l"
           />
           <button
             onClick={createTask}
