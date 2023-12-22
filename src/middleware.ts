@@ -6,19 +6,24 @@ export function middleware(request: NextRequest) {
 
   const isPublicPath = pathName === "/login" || pathName === "/signup";
   const token = request.cookies.get("next-auth.session-token")?.value || "";
+  const secureToken = request.cookies.get("__Secure-next-auth.session-token")?.value || "";
 
-  // If there's a valid token and the user is trying to access a public path, redirect to the dashboard
-  if (token && isPublicPath) {
-    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+
+  // Redirect to the dashboard if it's not a public path and there's a valid token
+  if (!isPublicPath && token || secureToken) {
+    return null;
   }
 
-  // If there's no valid token and the user is trying to access a private path, redirect to the login page
-  if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
+  // Redirect to the login page if it's not a public path and there's no valid token
+  if (!isPublicPath && !token || !secureToken) {
+    if (pathName === "/") {
+      return null; // Allow access to the home page without authentication
+    } else {
+      return NextResponse.redirect(new URL("/login", request.nextUrl));
+    }
   }
 
-  // Allow the request to proceed for public paths or when there's a valid token
-  return null;
+  // For public paths or when there's a valid token, do nothing and allow the request
 }
 
 // See "Matching Paths" below to learn more
