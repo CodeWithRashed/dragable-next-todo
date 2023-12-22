@@ -130,7 +130,7 @@ try {
   useEffect(() => {
     const getTodo = async () => {
       try {
-        const todoData = await axios.get(`/api/todo?email=${session?.user?.email}`);
+        const todoData = await axios.get(`/api/todo`);
   
         const groupedData: { [key: string]: Task[] } = {};
   

@@ -34,10 +34,9 @@ export async function GET(request: NextRequest, response: NextResponse) {
   connect();
   const session = await getServerSession(options)
 
-  const url = request.url;
-  const createdUser = url.split("=")[1] 
 
-const todoData = await Task.find({createdBy: createdUser || session?.user?.email})
+
+const todoData = await Task.find({createdBy: session?.user?.email})
 
     return NextResponse.json({todos: todoData});
   }
